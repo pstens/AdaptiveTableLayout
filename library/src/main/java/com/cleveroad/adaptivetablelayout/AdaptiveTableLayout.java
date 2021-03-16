@@ -242,10 +242,10 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
     }
 
     private void initItems() {
+        recycleViewHolders(true);
         if (mAdapter == null) {
             // clear
             mManager.clear();
-            recycleViewHolders(true);
             return;
         }
 

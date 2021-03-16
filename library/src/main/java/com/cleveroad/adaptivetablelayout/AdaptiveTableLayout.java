@@ -1042,7 +1042,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         // intercept event before OnClickListener on item view.
         final boolean wasConsumed = mScrollHelper.onTouch(ev);
-        // we want to delegate some events to have custom click listeners inside viewHolders
+        // we want to delegate some events to trigger custom click listeners
         final boolean isDownEvent = ev.getAction() == MotionEvent.ACTION_DOWN;
         final boolean isUpEvent = ev.getAction() == MotionEvent.ACTION_UP;
         final boolean isMove = ev.getAction() == MotionEvent.ACTION_MOVE;

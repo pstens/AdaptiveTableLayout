@@ -148,6 +148,10 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         return mLayoutDirectionHelper.isRTL();
     }
 
+    public AdaptiveTableManager getManager() {
+        return mManager;
+    }
+
     @Override
     public void setLayoutDirection(int layoutDirection) {
         super.setLayoutDirection(layoutDirection);
@@ -597,7 +601,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 viewPosRight,
                 viewPosBottom);
 
-        if (mState.isRowDragging()) {
+        if (mState.isRowDragging() || mSettings.isHeaderFixed()) {
             view.bringToFront();
         }
 
@@ -671,7 +675,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 left + mManager.getHeaderRowWidth() + leftMargin * (isRTL() ? 1 : 0),
                 top + mManager.getRowHeight(holder.getRowIndex()) - mState.getScrollY() + topMargin);
 
-        if (mState.isColumnDragging()) {
+        if (mState.isColumnDragging() || mSettings.isHeaderFixed()) {
             view.bringToFront();
         }
 

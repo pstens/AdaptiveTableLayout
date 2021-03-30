@@ -782,9 +782,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                 }
             }
         }
-        if (!headerKeysToRemove.isEmpty()) {
-            headerKeysToRemove.clear();
-        }
+
         // column header view holders
         for (int count = mHeaderColumnViewHolders.size(), i = 0; i < count; i++) {
             int key = mHeaderColumnViewHolders.keyAt(i);
@@ -974,52 +972,32 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         // save and measure view holder
         if (itemType == ViewHolderType.ITEM) {
             mViewHolders.put(row, column, viewHolder);
-            if (createdNewView) {
-                // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
-                mAdapter.onBindViewHolder(viewHolder, row, getBindColumn(column));
-            }
+            // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
+            mAdapter.onBindViewHolder(viewHolder, row, getBindColumn(column));
             view.measure(
                     MeasureSpec.makeMeasureSpec(mManager.getColumnWidth(column), MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(mManager.getRowHeight(row), MeasureSpec.EXACTLY));
             refreshItemViewHolder(viewHolder);
-            if (!createdNewView) {
-                // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
-                mAdapter.onBindViewHolder(viewHolder, row, getBindColumn(column));
-            }
 
 
         } else if (itemType == ViewHolderType.ROW_HEADER) {
             mHeaderRowViewHolders.put(row, viewHolder);
-            if (createdNewView) {
-                // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
-                mAdapter.onBindHeaderRowViewHolder(viewHolder, row);
-            }
+            // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
+            mAdapter.onBindHeaderRowViewHolder(viewHolder, row);
             view.measure(
                     MeasureSpec.makeMeasureSpec(mManager.getHeaderRowWidth(), MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(mManager.getRowHeight(row), MeasureSpec.EXACTLY));
 
             refreshHeaderRowViewHolder(viewHolder);
-            if (!createdNewView) {
-                // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
-                mAdapter.onBindHeaderRowViewHolder(viewHolder, row);
-            }
-
         } else if (itemType == ViewHolderType.COLUMN_HEADER) {
             mHeaderColumnViewHolders.put(column, viewHolder);
-            if (createdNewView) {
-                // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
-                mAdapter.onBindHeaderColumnViewHolder(viewHolder, getBindColumn(column));
-            }
+            // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
+            mAdapter.onBindHeaderColumnViewHolder(viewHolder, getBindColumn(column));
             view.measure(
                     MeasureSpec.makeMeasureSpec(mManager.getColumnWidth(column), MeasureSpec.EXACTLY),
                     MeasureSpec.makeMeasureSpec(mManager.getHeaderColumnHeight(), MeasureSpec.EXACTLY));
 
             refreshHeaderColumnViewHolder(viewHolder);
-
-            if (!createdNewView) {
-                // DO NOT REMOVE THIS!! Fix bug with request layout "requestLayout() improperly called"
-                mAdapter.onBindHeaderColumnViewHolder(viewHolder, getBindColumn(column));
-            }
         }
     }
 

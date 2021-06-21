@@ -371,4 +371,8 @@ class AdaptiveTableManager {
     public int[] getRowHeights() {
         return mRowHeights;
     }
+
+    public boolean isInit() {
+        return mIsInited;
+    }
 }

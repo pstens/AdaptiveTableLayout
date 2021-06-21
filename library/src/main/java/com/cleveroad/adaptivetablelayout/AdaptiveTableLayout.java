@@ -174,7 +174,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (isInEditMode()) {
+        if (isInEditMode() || !getManager().isInit()) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
             Log.v("onMeasure", MeasureSpec.toString(widthMeasureSpec));

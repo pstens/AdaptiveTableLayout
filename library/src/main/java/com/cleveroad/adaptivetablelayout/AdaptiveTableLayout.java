@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -169,6 +170,40 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             // init data
             initItems();
         }
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        if (isInEditMode()) {
+            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        } else {
+            Log.v("onMeasure", MeasureSpec.toString(widthMeasureSpec));
+            Log.v("onMeasure", MeasureSpec.toString(heightMeasureSpec));
+            int desiredWidth = (int) getManager().getFullWidth();
+            int desiredHeight = (int) getManager().getFullHeight();
+
+            setMeasuredDimension(measureDimension(desiredWidth, widthMeasureSpec), measureDimension(desiredHeight, heightMeasureSpec));
+        }
+    }
+
+    private int measureDimension(int desiredSize, int measureSpec) {
+        int result;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+
+        if (specMode == MeasureSpec.EXACTLY) {
+            result = specSize;
+        } else {
+            result = desiredSize;
+            if (specMode == MeasureSpec.AT_MOST) {
+                result = Math.min(result, specSize);
+            }
+        }
+
+        if (result < desiredSize){
+            Log.e("ChartView", "The view is too small, the content might get cut");
+        }
+        return result;
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {

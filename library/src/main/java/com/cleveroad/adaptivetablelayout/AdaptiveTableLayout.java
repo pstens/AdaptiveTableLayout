@@ -177,8 +177,6 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         if (isInEditMode() || !getManager().isInit()) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         } else {
-            Log.v("onMeasure", MeasureSpec.toString(widthMeasureSpec));
-            Log.v("onMeasure", MeasureSpec.toString(heightMeasureSpec));
             int desiredWidth = (int) getManager().getFullWidth();
             int desiredHeight = (int) getManager().getFullHeight();
 
@@ -198,10 +196,6 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             if (specMode == MeasureSpec.AT_MOST) {
                 result = Math.min(result, specSize);
             }
-        }
-
-        if (result < desiredSize){
-            Log.e("ChartView", "The view is too small, the content might get cut");
         }
         return result;
     }

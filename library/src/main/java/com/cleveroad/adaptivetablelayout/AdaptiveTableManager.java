@@ -10,7 +10,7 @@ package com.cleveroad.adaptivetablelayout;
  * <p>
  * In case changing full width or count of rows or columns, you need to re-init manager.(steps 2 - 4)
  */
-class AdaptiveTableManager {
+public class AdaptiveTableManager {
     /**
      * Contains full width (columns widths)
      */
@@ -39,7 +39,7 @@ class AdaptiveTableManager {
 
     private boolean mIsInited = false;
 
-    void clear() {
+    public void clear() {
         // clear objects
         mRowHeights = new int[0];
         mColumnWidths = new int[0];
@@ -53,7 +53,7 @@ class AdaptiveTableManager {
         mIsInited = false;
     }
 
-    void init(int rowCount, int columnCount) {
+    public void init(int rowCount, int columnCount) {
         if (rowCount < 0) {
             rowCount = 0;
         }
@@ -66,13 +66,13 @@ class AdaptiveTableManager {
         mIsInited = true;
     }
 
-    void checkForInit() {
+    public void checkForInit() {
         if (!mIsInited) {
             throw new IllegalStateException("You need to init matrix before work!");
         }
     }
 
-    void invalidate() {
+    public void invalidate() {
         checkForInit();
         // calculate widths
         mFullWidth = 0;
@@ -91,18 +91,15 @@ class AdaptiveTableManager {
      * @param column column index
      * @return column's width
      */
-    int getColumnWidth(int column) {
+    public int getColumnWidth(int column) {
         checkForInit();
         return mColumnWidths[column];
     }
 
     /**
      * Put column width to the array. Call {@link #invalidate()} after all changes.
-     *
-     * @param column column index
-     * @param width  column's width
      */
-    void putColumnWidth(int column, int width) {
+    public void putColumnWidth(int column, int width) {
         checkForInit();
         mColumnWidths[column] = width;
     }
@@ -112,7 +109,7 @@ class AdaptiveTableManager {
      * @param to   to column index
      * @return columns width
      */
-    int getColumnsWidth(int from, int to) {
+    public int getColumnsWidth(int from, int to) {
         checkForInit();
         int width = 0;
         for (int i = from; i < to && mColumnWidths != null; i++) {
@@ -124,7 +121,7 @@ class AdaptiveTableManager {
     /**
      * @return columns count
      */
-    int getColumnCount() {
+    public int getColumnCount() {
         checkForInit();
         if (mColumnWidths != null) {
             return mColumnWidths.length;
@@ -136,7 +133,7 @@ class AdaptiveTableManager {
      * @param row row index
      * @return row's height
      */
-    int getRowHeight(int row) {
+    public int getRowHeight(int row) {
         checkForInit();
         return mRowHeights[row];
     }
@@ -148,7 +145,7 @@ class AdaptiveTableManager {
      * @param row    row index
      * @param height row's height
      */
-    void putRowHeight(int row, int height) {
+    public void putRowHeight(int row, int height) {
         checkForInit();
         mRowHeights[row] = height;
 
@@ -159,7 +156,7 @@ class AdaptiveTableManager {
      * @param to   to row index
      * @return rows height
      */
-    int getRowsHeight(int from, int to) {
+    public int getRowsHeight(int from, int to) {
         checkForInit();
         int height = 0;
         for (int i = from; i < to && mRowHeights != null; i++) {
@@ -171,7 +168,7 @@ class AdaptiveTableManager {
     /**
      * @return rows count
      */
-    int getRowCount() {
+    public int getRowCount() {
         checkForInit();
         if (mRowHeights != null) {
             return mRowHeights.length;
@@ -182,7 +179,7 @@ class AdaptiveTableManager {
     /**
      * @return columns width with row's header width
      */
-    long getFullWidth() {
+    public long getFullWidth() {
         checkForInit();
         return mFullWidth + mHeaderRowWidth;
     }
@@ -190,7 +187,7 @@ class AdaptiveTableManager {
     /**
      * @return rows height with column's header height
      */
-    long getFullHeight() {
+    public long getFullHeight() {
         checkForInit();
         return mFullHeight + mHeaderColumnHeight;
     }
@@ -201,7 +198,7 @@ class AdaptiveTableManager {
      * @param x coordinate
      * @return column number
      */
-    int getColumnByX(int x) {
+    public int getColumnByX(int x) {
         checkForInit();
         int sum = 0;
         // header offset
@@ -227,7 +224,7 @@ class AdaptiveTableManager {
      * @param x coordinate
      * @return column number
      */
-    int getColumnByXWithShift(int x, int shiftEveryStep) {
+    public int getColumnByXWithShift(int x, int shiftEveryStep) {
         checkForInit();
         int sum = 0;
         // header offset
@@ -253,7 +250,7 @@ class AdaptiveTableManager {
      * @param y coordinate
      * @return row number
      */
-    int getRowByY(int y) {
+    public int getRowByY(int y) {
         checkForInit();
         int sum = 0;
         // header offset
@@ -280,7 +277,7 @@ class AdaptiveTableManager {
      * @param y coordinate
      * @return row number
      */
-    int getRowByYWithShift(int y, int shiftEveryStep) {
+    public int getRowByYWithShift(int y, int shiftEveryStep) {
         checkForInit();
         int sum = 0;
         // header offset
@@ -304,7 +301,7 @@ class AdaptiveTableManager {
     /**
      * @return column's header height
      */
-    int getHeaderColumnHeight() {
+    public int getHeaderColumnHeight() {
         checkForInit();
         return mHeaderColumnHeight;
     }
@@ -314,7 +311,7 @@ class AdaptiveTableManager {
      *
      * @param headerColumnHeight column's header height.
      */
-    void setHeaderColumnHeight(int headerColumnHeight) {
+    public void setHeaderColumnHeight(int headerColumnHeight) {
         checkForInit();
         mHeaderColumnHeight = headerColumnHeight;
     }
@@ -322,7 +319,7 @@ class AdaptiveTableManager {
     /**
      * @return row's header width
      */
-    int getHeaderRowWidth() {
+    public int getHeaderRowWidth() {
         checkForInit();
         return mHeaderRowWidth;
     }
@@ -333,7 +330,7 @@ class AdaptiveTableManager {
      *
      * @param headerRowWidth row's header width.
      */
-    void setHeaderRowWidth(int headerRowWidth) {
+    public void setHeaderRowWidth(int headerRowWidth) {
         checkForInit();
         mHeaderRowWidth = headerRowWidth;
     }
@@ -344,7 +341,7 @@ class AdaptiveTableManager {
      * @param columnIndex   from column index
      * @param columnToIndex to column index
      */
-    void switchTwoColumns(int columnIndex, int columnToIndex) {
+    public void switchTwoColumns(int columnIndex, int columnToIndex) {
         checkForInit();
         int cellData = mColumnWidths[columnToIndex];
         mColumnWidths[columnToIndex] = mColumnWidths[columnIndex];
@@ -357,7 +354,7 @@ class AdaptiveTableManager {
      * @param rowIndex   from row index
      * @param rowToIndex to row index
      */
-    void switchTwoRows(int rowIndex, int rowToIndex) {
+    public void switchTwoRows(int rowIndex, int rowToIndex) {
         checkForInit();
         int cellData = mRowHeights[rowToIndex];
         mRowHeights[rowToIndex] = mRowHeights[rowIndex];

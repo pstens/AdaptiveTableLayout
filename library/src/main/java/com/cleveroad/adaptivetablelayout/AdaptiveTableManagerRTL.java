@@ -16,7 +16,7 @@ class AdaptiveTableManagerRTL extends AdaptiveTableManager {
     }
 
     @Override
-    int getColumnByXWithShift(int x, int shiftEveryStep) {
+    public int getColumnByXWithShift(int x, int shiftEveryStep) {
         if (!mLayoutDirectionHelper.isRTL()) {
             return super.getColumnByXWithShift(x, shiftEveryStep);
         } else {

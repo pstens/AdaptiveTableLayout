@@ -6,12 +6,19 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import timber.log.Timber;
+
 /**
  * {@inheritDoc}
  * Common base class of common implementation for an {@link AdaptiveTableAdapter} that
  * can be used in {@link AdaptiveTableLayout}.
  */
 public abstract class LinkedAdaptiveTableAdapter<VH extends ViewHolder> implements AdaptiveTableAdapter<VH> {
+
+    public void plantTimber() {
+        Timber.plant(new Timber.DebugTree());
+    }
+
     protected boolean mIsRtl;
     /**
      * Set with observers

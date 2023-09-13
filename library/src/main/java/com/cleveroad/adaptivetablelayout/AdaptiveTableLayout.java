@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import timber.log.Timber;
 
 public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.ScrollHelperListener, AdaptiveTableDataSetObserver {
 
@@ -168,7 +169,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             mSettings.setLayoutWidth(r - l);
             mSettings.setLayoutHeight(b - t);
             // init data
-            initItems();
+            initItems(false);
         }
     }
 
@@ -274,7 +275,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         super.onRestoreInstanceState(result);
     }
 
-    private void initItems() {
+    private void initItems(Boolean skipAddViewHolders) {
         recycleViewHolders(true);
         if (mAdapter == null) {
             // clear
@@ -305,18 +306,22 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         // start calculating full width and full height
         mManager.invalidate();
 
-        // show items in this area
-        mVisibleArea.set(mState.getScrollX(),
-                mState.getScrollY(),
-                mState.getScrollX() + mSettings.getLayoutWidth(),
-                mState.getScrollY() + mSettings.getLayoutHeight());
-        addViewHolders(mVisibleArea);
+        showItems(skipAddViewHolders);
         if (mSaver != null) {
             scrollTo(mSaver.mScrollX, mSaver.mScrollY);
             mSaver = null;
         } else if (isRTL()) {
             scrollTo(mSettings.getLayoutWidth(), 0);
         }
+    }
+
+    private void showItems(Boolean skipAddViewHolders) {
+        // show items in this area
+        mVisibleArea.set(mState.getScrollX(),
+                mState.getScrollY(),
+                mState.getScrollX() + mSettings.getLayoutWidth(),
+                mState.getScrollY() + mSettings.getLayoutHeight());
+        if (!skipAddViewHolders) addViewHolders(mVisibleArea);
     }
 
     /**
@@ -343,7 +348,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             // remove adapter
             mAdapter = null;
         }
-        initItems();
+        initItems(false);
     }
 
     /**
@@ -368,7 +373,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         }
 
         if (mSettings.getLayoutHeight() != 0 && mSettings.getLayoutWidth() != 0) {
-            initItems();
+            initItems(false);
         }
     }
 
@@ -911,12 +916,17 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
         int columnCount = mManager.getColumnCount();
         if (columnCount > 0) {
             if (mManager.getRowCount() > 0) {
+                long startTimeOverall = System.currentTimeMillis();
                 for (int i = topRow; i <= bottomRow; i++) {
                     for (int j = leftColumn; j <= rightColumn; j++) {
                         // item view holders
                         ViewHolder viewHolder = mViewHolders.get(i, j);
                         if (viewHolder == null && mAdapter != null) {
+                            long startTime = System.currentTimeMillis();
                             addViewHolder(i, j, ViewHolderType.ITEM);
+                            long estimatedTime = System.currentTimeMillis() - startTime;
+                            String result = "Binding for row " + i + " and column " + j + " took =" + estimatedTime + " millis";
+                            Timber.tag("BindingPerRow").d(result);
                         }
                     }
 
@@ -928,6 +938,10 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
                         refreshHeaderRowViewHolder(viewHolder);
                     }
                 }
+                long estimatedTimeOverall = System.currentTimeMillis() - startTimeOverall;
+                String result = "NotifyDataSetChanged took =" + estimatedTimeOverall + " millis";
+                Timber.tag("DataSetChanged").d(result);
+
             }
 
             for (int i = leftColumn; i <= rightColumn; i++) {
@@ -1667,7 +1681,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
 
     @Override
     public void notifyDataSetChanged() {
-        initItems();
+        initItems(true);
         notifyLayoutChanged();
     }
 
@@ -1675,11 +1689,7 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
     public void notifyLayoutChanged() {
         recycleViewHolders(true);
         invalidate();
-        mVisibleArea.set(mState.getScrollX(),
-                mState.getScrollY(),
-                mState.getScrollX() + mSettings.getLayoutWidth(),
-                mState.getScrollY() + mSettings.getLayoutHeight());
-        addViewHolders(mVisibleArea);
+        showItems(false);
     }
 
     @Override
@@ -1695,7 +1705,12 @@ public class AdaptiveTableLayout extends ViewGroup implements ScrollHelper.Scrol
             holder = mViewHolders.get(rowIndex - 1, columnIndex - 1);
         }
         if (holder != null) {
+            long startTime = System.currentTimeMillis();
             viewHolderChanged(holder);
+            long estimatedTime = System.currentTimeMillis() - startTime;
+            String result = "NotifyItemChanged took =" + estimatedTime + " millis for row = " + rowIndex +
+                    " column =" + columnIndex;
+            Timber.tag("NotifyItemChanged").d(result);
         }
     }
 
